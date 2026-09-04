@@ -4,6 +4,56 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>KAS RT 005 KOMPLEK PLTG</title>
+<script>
+  // URL backend Google Apps Script asli milik Anda
+  const WEB_APP_URL = "https://google.com";
+
+  // MEMBUAT OBJEK GOOGLE TIRUAN AGAR APLIKASI TIDAK MACET DI GITHUB
+  window.google = {
+    script: {
+      run: {
+        // Fungsi tiruan untuk mengalihkan semua walkie-talkie Google menjadi surat internet (fetch)
+        withSuccessHandler: function(onSuccess) {
+          return {
+            withFailureHandler: function(onFailure) {
+              return {
+                // Skrip otomatis pembaca semua nama fungsi bawaan kode asli Anda
+                loginAdmin_: function(payload) {
+                  kirimKeGoogleBackend("login", payload, onSuccess, onFailure);
+                },
+                loadCategoriesForType: function(type) {
+                  kirimKeGoogleBackend("load_categories", { type: type }, onSuccess, onFailure);
+                }
+                // Anda bisa menambahkan nama fungsi bawaan Anda yang lain di bawah jika nanti ada yang macet
+              };
+            }
+          };
+        }
+      }
+    }
+  };
+
+  // Fungsi inti pengirim paket data dari GitHub ke Google Sheets
+  function kirimKeGoogleBackend(aksi, dataInput, onSuccess, onFailure) {
+    fetch(WEB_APP_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: aksi, ...dataInput })
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === "success" || res.success) {
+        if(onSuccess) onSuccess(res.user || res);
+      } else {
+        if(onFailure) onFailure(new Error(res.message || "Gagal memproses data"));
+        else alert("Error: " + res.message);
+      }
+    })
+    .catch(err => {
+      if(onFailure) onFailure(err);
+      else alert("Gagal terhubung ke Google Server. Pastikan setelan akses Web App Anda adalah 'Anyone'.");
+    });
+  }
+</script>
 
   <style>
     :root{

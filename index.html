@@ -1,6 +1,57 @@
 <!doctype html>
 <html>
 <head>
+  <script>
+  // ==========================================
+  // SINKRONISASI TOTAL GITHUB PAGES ➡️ BACKEND GOOGLE
+  // ==========================================
+  const WEB_APP_URL = "https://google.com";
+
+  // Membuat objek google palsu di memori teratas browser sebelum fungsi lain berjalan
+  window.google = {
+    script: {
+      run: {
+        withSuccessHandler: function(onSuccess) {
+          return {
+            withFailureHandler: function(onFailure) {
+              // Membuat sistem otomatis (Proxy) untuk menangkap semua nama fungsi bawaan Anda
+              return new Proxy({}, {
+                get: function(target, propName) {
+                  return function(...args) {
+                    console.log("GitHub memicu fungsi backend: " + propName);
+                    
+                    // Mengubah semua perintah walkie-talkie menjadi Fetch API JSON
+                    fetch(WEB_APP_URL, {
+                      method: "POST",
+                      body: JSON.stringify({
+                        action: propName, // Mengirim nama fungsi asli (loginAdmin_, loadCategoriesForType, dll)
+                        arguments: args
+                      })
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                      if (res.status === "success" || res.success) {
+                        if (onSuccess) onSuccess(res.user || res.data || res);
+                      } else {
+                        if (onFailure) onFailure(new Error(res.message || "Gagal memproses data"));
+                        else alert("Error Server: " + res.message);
+                      }
+                    })
+                    .catch(err => {
+                      if (onFailure) onFailure(err);
+                      else console.error("Koneksi Google Terputus:", err);
+                    });
+                  };
+                }
+              });
+            }
+          };
+        }
+      }
+    }
+  };
+</script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>KAS RT 005 KOMPLEK PLTG</title>

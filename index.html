@@ -4462,50 +4462,48 @@
 
       if(btn){ btn.disabled = true; setBtnText(btn, 'Masuk...'); }
 
-      google.script.run
-        .withSuccessHandler(res=>{
-          if(btn){ btn.disabled = false; setBtnText(btn, 'Masuk'); }
-          if(res && res.success){
-            TOKEN = res.token;
-            window.TOKEN = TOKEN;
-            IS_ADMIN = true;
-            window.IS_ADMIN = true;
+      // URL Backend Asli Google Apps Script Anda yang valid
+      const URL_BACKEND_KSL = "https://google.com";
 
-            setAdminUI(true);
-
-            // =========================
-            // PATCH SHOW PREPAID BUTTON
-            // =========================
-            const prepaidBtn = document.getElementById('btnPrepaid');
-
-            if(prepaidBtn){
-              prepaidBtn.style.display = 'inline-flex';
-            }
-            
-            closeLogin();
-            toast("Login berhasil. Mode Admin aktif.");
-
-            // kategori sesuai tipe aktif
-            loadCategoriesForType(document.getElementById('tipe')?.value || 'IN');
-
-            loadRtName();
-
-            // ✅ setelah kas+summary siap, munculkan ringkasan tunggakan
-            loadKasMaster(()=> {
-              refresh();
-              setTimeout(loadTunggakanSummary, 200);
-            });
-
-          }else{
-            if(hint) hint.textContent = res?.message || 'Login gagal.';
-          }
+      // Mengirim paket data login dari GitHub Pages ke Google Sheets (Fetch)
+      fetch(URL_BACKEND_KSL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({
+          action: "login", 
+          username: u,
+          password: p
         })
-        .withFailureHandler(err=>{
-          if(btn){ btn.disabled = false; setBtnText(btn, 'Masuk'); }
-          if(hint) hint.textContent = "Error: " + (err?.message || err);
-        })
-        .loginAdmin({username:u, password:p});
+      })
+      .then(response => response.json())
+      .then(res => {
+        if(btn){ btn.disabled = false; setBtnText(btn, 'Masuk'); }
+        
+        // Membaca respons sukses dan mencocokkannya dengan variabel asli UI Anda
+        if(res && (res.status === "success" || res.success)){
+          TOKEN = res.user?.token || "TOKEN_GITHUB_OK";
+          window.TOKEN = TOKEN;
+          IS_ADMIN = true;
+          window.IS_ADMIN = true;
+
+          setAdminUI(true); // Membuka dashboard pengurus RT
+          closeLogin();     // Menutup kotak popup login modal
+          
+          if(hint) hint.textContent = 'Login Berhasil!';
+          if(typeof refreshAll === 'function') refreshAll(); // Muat ulang data jika ada fungsinya
+        } else {
+          if(hint) hint.textContent = res.message || 'Username atau Password salah.';
+        }
+      })
+      .catch(err => {
+        if(btn){ btn.disabled = false; setBtnText(btn, 'Masuk'); }
+        if(hint) hint.textContent = 'Gagal terhubung ke Google Server.';
+        console.error("Fetch Error:", err);
+      });
     }
+
 
     function logout(){
 

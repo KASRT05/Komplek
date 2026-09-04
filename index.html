@@ -3,34 +3,33 @@
 <head>
 <script>
   // ====================================================================
-  // SINKRONISASI FINALE: KSL KAS RT 005 CIREBON LINTAS DOMAIN GITHUB 
+  // SINKRONISASI FINALE: PEMAKSA JALUR UTAMA BACKEND KAS RT 005 CIREBON
   // ====================================================================
   
-  // 1. Alamat Surat Internet yang Asli Menuju Google Sheets Anda
-  var BACKEND_KSL_URL = "https://google.com";
+  // Alamat asli Google Apps Script Web App Anda (Tujuan Mutlak)
+  var URL_BACKEND_ASLI = "https://google.com";
 
-  // 2. Google Tiruan Paling Sempurna untuk Menjembatani Seluruh Fungsi Aplikasi
+  // Google Tiruan dengan Pemaksa Alamat Lintas Domain
   window.google = {
     script: {
       run: {
         withSuccessHandler: function(onSuccess) {
           return {
             withFailureHandler: function(onFailure) {
-              // Menggunakan teknologi Proxy Otomatis untuk mengaitkan semua fungsi internal Anda
               return new Proxy({}, {
                 get: function(target, propName) {
                   return function(...args) {
                     console.log("GitHub memicu fungsi backend: " + propName);
                     
-                    // Kirim paket data menggunakan POST ke URL Google Script yang BENAR
-                    fetch(BACKEND_KSL_URL, {
+                    // MAKSIMALKAN KEAMANAN: Memaksa browser menembak URL_BACKEND_ASLI
+                    fetch(URL_BACKEND_ASLI, {
                       method: "POST",
                       headers: {
                         "Content-Type": "text/plain;charset=utf-8"
                       },
                       body: JSON.stringify({
-                        action: propName,   // Mengirim fungsi asli (listCategories, loginAdmin, dll)
-                        arguments: args     // Mengirim parameter data bawaan fungsi
+                        action: propName, 
+                        arguments: args   
                       })
                     })
                     .then(res => {
@@ -38,13 +37,11 @@
                       return res.json();
                     })
                     .then(res => {
-                      // Menyalurkan jawaban sukses dari Google Sheets kembali ke UI Aplikasi Anda
                       if (res && (res.status === "success" || res.success)) {
                         if (onSuccess) onSuccess(res.user || res.data || res);
                       } else {
-                        var msg = res ? (res.message || "Gagal memproses data backend") : "Respon kosong";
+                        var msg = res ? (res.message || "Gagal memproses data") : "Respon kosong";
                         if (onFailure) onFailure(new Error(msg));
-                        else console.warn("Peringatan Sistem: " + msg);
                       }
                     })
                     .catch(err => {
@@ -60,7 +57,27 @@
       }
     }
   };
+
+  // 🚨 FUNGSI PENJAGA (PENTING):
+  // Menimpa fungsi lama di index.html Anda jika ada yang memaksa mengarahkan ke google.com
+  window.kirimKeGoogleBackend = function(aksi, dataInput, onSuccess, onFailure) {
+    fetch(URL_BACKEND_ASLI, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: aksi, ...dataInput })
+    })
+    .then(res => res.json())
+    .then(res => {
+      if (res.status === "success" || res.success) {
+        if (onSuccess) onSuccess(res.user || res.data || res);
+      } else {
+        if (onFailure) onFailure(new Error(res.message));
+      }
+    })
+    .catch(err => { if (onFailure) onFailure(err); });
+  };
 </script>
+
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />

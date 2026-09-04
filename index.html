@@ -3,13 +3,24 @@
 <head>
 <script>
   // ====================================================================
-  // SINKRONISASI FINALE: PEMAKSA JALUR UTAMA BACKEND KAS RT 005 CIREBON
+  // PEMBAJAK JALUR UTAMA (MUTLAK): KAS RT 005 CIREBON LINTAS DOMAIN 
   // ====================================================================
   
-  // Alamat asli Google Apps Script Web App Anda (Tujuan Mutlak)
-  var URL_BACKEND_ASLI = "https://google.com";
+  // Alamat tujuan asli yang BENAR (Google Apps Script Web App Anda)
+  var URL_KAS_BENAR = "https://google.com";
 
-  // Google Tiruan dengan Pemaksa Alamat Lintas Domain
+  // 🚨 TRICK PAMUNGKAS: Membajak fungsi fetch bawaan browser khusus halaman ini
+  const fetchAsli = window.fetch;
+  window.fetch = function(url, opsi) {
+    // Jika ada kode di index.html Anda yang nyasar menembak ke google.com
+    if (typeof url === 'string' && (url.includes('google.com') && !url.includes('script.google.com'))) {
+      console.warn("⚠️ TERDETEKSI ALAMAT NYASAR! Membelokkan paksa ke server kas yang benar.");
+      url = URL_KAS_BENAR; // Ganti paksa alamatnya di sini
+    }
+    return fetchAsli(url, opsi);
+  };
+
+  // Google Tiruan dengan Pemaksa Fungsi Internal
   window.google = {
     script: {
       run: {
@@ -19,33 +30,25 @@
               return new Proxy({}, {
                 get: function(target, propName) {
                   return function(...args) {
-                    console.log("GitHub memicu fungsi backend: " + propName);
+                    console.log("GitHub memicu fungsi backend via Proxy: " + propName);
                     
-                    // MAKSIMALKAN KEAMANAN: Memaksa browser menembak URL_BACKEND_ASLI
-                    fetch(URL_BACKEND_ASLI, {
+                    fetch(URL_KAS_BENAR, {
                       method: "POST",
-                      headers: {
-                        "Content-Type": "text/plain;charset=utf-8"
-                      },
+                      headers: { "Content-Type": "text/plain;charset=utf-8" },
                       body: JSON.stringify({
                         action: propName, 
                         arguments: args   
                       })
                     })
-                    .then(res => {
-                      if (!res.ok) throw new Error("Server Google merespons error status " + res.status);
-                      return res.json();
-                    })
+                    .then(res => res.json())
                     .then(res => {
                       if (res && (res.status === "success" || res.success)) {
                         if (onSuccess) onSuccess(res.user || res.data || res);
                       } else {
-                        var msg = res ? (res.message || "Gagal memproses data") : "Respon kosong";
-                        if (onFailure) onFailure(new Error(msg));
+                        if (onFailure) onFailure(new Error(res.message || "Gagal memproses data"));
                       }
                     })
                     .catch(err => {
-                      console.error("Fetch Error Detail:", err);
                       if (onFailure) onFailure(err);
                     });
                   };
@@ -58,10 +61,9 @@
     }
   };
 
-  // 🚨 FUNGSI PENJAGA (PENTING):
-  // Menimpa fungsi lama di index.html Anda jika ada yang memaksa mengarahkan ke google.com
+  // Menimpa fungsi kirim manual lama Anda agar tidak nyasar ke google.com
   window.kirimKeGoogleBackend = function(aksi, dataInput, onSuccess, onFailure) {
-    fetch(URL_BACKEND_ASLI, {
+    fetch(URL_KAS_BENAR, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({ action: aksi, ...dataInput })

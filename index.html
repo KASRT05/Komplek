@@ -10,13 +10,29 @@
       padding: 0;
       height: 100%;
       width: 100%;
+      overflow: hidden;
       background-color: #F5F7FB;
       font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    
+    /* ===== 📥 DESAIN LAYAR TUNGGU (LOADING SCREEN) ===== */
+    .loading-screen {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      background: #F5F7FB;
+      z-index: 999; 
       color: #475569;
+      transition: opacity 0.4s ease, visibility 0.4s ease; /* Efek memudar halus */
     }
     /* Animasi lingkaran berputar (Spinner) */
     .spinner {
@@ -32,26 +48,46 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    h3 { margin: 0 0 6px 0; font-size: 16px; color: #0F172A; font-weight: 700; }
-    p { margin: 0; font-size: 13px; color: #64748B; }
+    .loading-screen h3 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      color: #0F172A;
+      font-weight: 700;
+    }
+    .loading-screen p {
+      margin: 0;
+      font-size: 13px;
+      color: #64748B;
+    }
+    /* Kelas untuk menghilangkan loading screen */
+    .fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
   </style>
 </head>
 <body>
 
-  <!-- 📥 ANIMASI LAYAR TUNGGU SEBELUM DIALIKHAN SECARA AMAN -->
-  <div class="spinner"></div>
-  <h3>Sabar Ya..Lambat dikit, Maklum Mode Gratis</h3>
-  <p>Anda akan dihubungkan ke page RT 05</p>
+  <!-- LAYER TRANSISI LAYAR TUNGGU UNTUK WARGA -->
+  <div id="loading" class="loading-screen">
+    <div class="spinner"></div>
+    <h3>Tunggu sebentar...Maklum Mode GRATIS!!</h3>
+    <p>Anda akan dihubungkan ke page RT 05</p>
+  </div>
+
+  <!-- BINGKAI KAS RT UTAMA -->
+  <iframe id="kasIframe" src="https://script.google.com/macros/s/AKfycbw_6ECsqBpbXfpuakmAnSAC-iI4UAttGtqcaaBdpPNvCMNRHv15Qd5wX4ltOmYKjZDPVw/exec">
+    Browser Anda tidak mendukung iframe.
+  </iframe>
 
   <script>
-    // Link tujuan Google Apps Script murni Anda
-    const targetUrl = "https://google.com";
+    var iframe = document.getElementById('kasIframe');
+    var loading = document.getElementById('loading');
 
-    // Jeda waktu 1.5 detik agar warga melihat animasi loading yang profesional,
-    // lalu browser langsung dilempar ke sistem kas secara murni tanpa iframe terlarang Google!
-    setTimeout(function() {
-      window.location.replace(targetUrl);
-    }, 1500);
+    // Otomatis menghilangkan layar loading ketika server Apps Script selesai memuat halaman
+    iframe.onload = function() {
+      loading.classList.add('fade-out');
+    };
   </script>
 
 </body>

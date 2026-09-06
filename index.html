@@ -29,68 +29,54 @@
       height: 100%;
       display: block;
     }
-    /* Banner bantuan jika Google menolak koneksi akibat multi-login akun Gmail */
-    .error-helper {
+    .loading-box {
       position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #FFFFFF;
-      border: 1px solid rgba(220,38,38,.25);
-      padding: 10px 16px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      inset: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
-      z-index: 999;
-      font-size: 13px;
-    }
-    .btn-fix {
-      background: linear-gradient(135deg, #7C3AED, #22D3EE);
-      color: #FFFFFF;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
+      justify-content: center;
+      background: #F5F7FB;
+      z-index: 999; 
+      color: #475569;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- Banner instruksi jika layar memutih / refused to connect akibat gangguan akun Google -->
-    <div class="error-helper">
-      <span>⚠️ Layar tidak muncul atau Error? Pasang pengaman akun Anda:</span>
-      <a class="btn-fix" id="fixLink" href="#" target="_blank">Buka Akses Langsung</a>
+    <!-- Tampilan memuat cepat sebelum dialihkan otomatis jika akun Google bermasalah -->
+    <div id="loading" class="loading-box">
+      <h3>Memuat Kas RT 005...</h3>
+      <p style="font-size: 13px; color: #64748b;">Menghubungkan ke server pengaman Google...</p>
     </div>
 
-    <!-- TAUTAN IFRAME SUDAH DIKEMBALIKAN KE GOOGLE APPS SCRIPT ASLI KAS RT ANDA -->
-    <iframe id="kasIframe" src="https://script.google.com/macros/s/AKfycbw_6ECsqBpbXfpuakmAnSAC-iI4UAttGtqcaaBdpPNvCMNRHv15Qd5wX4ltOmYKjZDPVw/exec">
+    <iframe id="kasIframe" src="https://google.com">
       Browser Anda tidak mendukung iframe.
     </iframe>
   </div>
 
   <script>
-    const baseUrl = "https://script.google.com/macros/s/AKfycbw_6ECsqBpbXfpuakmAnSAC-iI4UAttGtqcaaBdpPNvCMNRHv15Qd5wX4ltOmYKjZDPVw/exec";
-    
-    // Mengarahkan tombol bantuan langsung ke server utama jika iframe macet
-    document.getElementById('fixLink').href = baseUrl;
+    const baseUrl = "https://google.com";
 
-    window.onload = function() {
-      const iframe = document.getElementById('kasIframe');
-      
-      setTimeout(() => {
-        try {
-          if (iframe.contentWindow.length === 0) {
-            // Iframe gagal merespon secara internal
-          }
-        } catch (e) {
-          console.log("Multi-login Google terdeteksi di browser Anda.");
+    // TAKTIK TERKUAT (Auto-Buster): Jika dalam 1.2 detik Google memblokir Iframe akibat multi-login,
+    // Sistem akan langsung memindahkan halaman browser utama secara otomatis tanpa perlu klik tombol!
+    setTimeout(function() {
+      var iframe = document.getElementById('kasIframe');
+      try {
+        if (iframe.contentWindow.length === 0) {
+           // Iframe terdeteksi kosong
         }
-      }, 3000);
+      } catch (err) {
+        // Terjadi penolakan Cross-Origin dari Google (Refused to Connect)
+        console.log("Mengalihkan otomatis ke link aman Google...");
+        window.top.location.href = baseUrl;
+      }
+    }, 1200); 
+
+    // Hilangkan layar loading jika browser berhasil meloloskan iframe
+    document.getElementById('kasIframe').onload = function() {
+      document.getElementById('loading').style.display = 'none';
     };
   </script>
 

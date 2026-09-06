@@ -45,12 +45,13 @@
 <body>
 
   <div class="container">
-    <!-- Tampilan memuat cepat sebelum dialihkan otomatis jika akun Google bermasalah -->
+    <!-- Layar memuat transisi yang akan hilang otomatis -->
     <div id="loading" class="loading-box">
       <h3>Memuat Kas RT 005...</h3>
       <p style="font-size: 13px; color: #64748b;">Menghubungkan ke server pengaman Google...</p>
     </div>
 
+    <!-- Iframe murni tanpa banner gangguan -->
     <iframe id="kasIframe" src="https://google.com">
       Browser Anda tidak mendukung iframe.
     </iframe>
@@ -59,22 +60,21 @@
   <script>
     const baseUrl = "https://google.com";
 
-    // TAKTIK TERKUAT (Auto-Buster): Jika dalam 1.2 detik Google memblokir Iframe akibat multi-login,
-    // Sistem akan langsung memindahkan halaman browser utama secara otomatis tanpa perlu klik tombol!
+    // Auto-Buster: Jika browser mendeteksi penolakan Cross-Origin dari Google akibat akun Gmail tabrakan,
+    // halaman akan langsung dialihkan ke URL utama secara mandiri agar warga bisa login tanpa kendala.
     setTimeout(function() {
       var iframe = document.getElementById('kasIframe');
       try {
         if (iframe.contentWindow.length === 0) {
-           // Iframe terdeteksi kosong
+           // Iframe kosong
         }
       } catch (err) {
-        // Terjadi penolakan Cross-Origin dari Google (Refused to Connect)
         console.log("Mengalihkan otomatis ke link aman Google...");
         window.top.location.href = baseUrl;
       }
     }, 1200); 
 
-    // Hilangkan layar loading jika browser berhasil meloloskan iframe
+    // Hilangkan layar loading ketika sistem web kas berhasil termuat sempurna
     document.getElementById('kasIframe').onload = function() {
       document.getElementById('loading').style.display = 'none';
     };

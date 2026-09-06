@@ -8,76 +8,47 @@
   <!-- Membaca file favicon.png asli dari repositori GitHub Anda -->
   <link rel="icon" type="image/png" href="favicon.png">
 
+  <!-- METODE 1: Pengalihan Instan via Meta Tag (Bypass Total Iframe) -->
+  <meta http-equiv="refresh" content="0;url=https://google.com">
+
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       width: 100%;
-      overflow: hidden;
       background-color: #F5F7FB;
       font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
-    }
-    .container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    iframe {
-      border: none;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    .loading-box {
-      position: absolute;
-      inset: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #F5F7FB;
-      z-index: 999; 
       color: #475569;
+    }
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #7C3AED;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <!-- Layar memuat transisi yang akan hilang otomatis -->
-    <div id="loading" class="loading-box">
-      <h3>Memuat Kas RT 005...</h3>
-      <p style="font-size: 13px; color: #64748b;">Menghubungkan ke server pengaman Google...</p>
-    </div>
-
-    <!-- Iframe murni tanpa banner gangguan -->
-    <iframe id="kasIframe" src="https://google.com">
-      Browser Anda tidak mendukung iframe.
-    </iframe>
-  </div>
+  <div class="loader"></div>
+  <h3>Mengalihkan ke Kas RT 005...</h3>
+  <p style="font-size: 13px; color: #64748b;">Mohon tunggu sebentar, sedang menghubungkan ke server Google.</p>
 
   <script>
-    const baseUrl = "https://google.com";
-
-    // Auto-Buster: Jika browser mendeteksi penolakan Cross-Origin dari Google akibat akun Gmail tabrakan,
-    // halaman akan langsung dialihkan ke URL utama secara mandiri agar warga bisa login tanpa kendala.
-    setTimeout(function() {
-      var iframe = document.getElementById('kasIframe');
-      try {
-        if (iframe.contentWindow.length === 0) {
-           // Iframe kosong
-        }
-      } catch (err) {
-        console.log("Mengalihkan otomatis ke link aman Google...");
-        window.top.location.href = baseUrl;
-      }
-    }, 1200); 
-
-    // Hilangkan layar loading ketika sistem web kas berhasil termuat sempurna
-    document.getElementById('kasIframe').onload = function() {
-      document.getElementById('loading').style.display = 'none';
-    };
+    // METODE 2: Pengalihan Cadangan via JavaScript (Eksekusi Super Cepat)
+    window.location.href = "https://google.com";
   </script>
 
 </body>

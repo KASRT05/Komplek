@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kas RT 005 Komplek PLTG Cirebon</title>
   
   <!-- Membaca file favicon.png asli dari repositori GitHub Anda -->
@@ -14,39 +14,18 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      overflow: hidden;
       background-color: #F5F7FB;
       font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
-    }
-    .wrapper {
-      width: 100%;
-      height: 100%;
-      border: none;
-      padding: 0;
-      margin: 0;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
-    /* --- Desain Layar Tunggu Elegan (Loading Screen) --- */
-    .loading-screen {
-      position: absolute;
-      inset: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #F5F7FB;
-      z-index: 999; 
       color: #475569;
-      transition: opacity 0.4s ease; /* Efek menghilang mulus */
     }
+    /* Animasi lingkaran berputar (Spinner) */
     .spinner {
       border: 4px solid #E2E8F0;
-      border-top: 4px solid #7C3AED; /* Warna ungu brand */
+      border-top: 4px solid #7C3AED; /* Warna ungu brand KSL */
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -57,37 +36,26 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    .loading-screen h3 { margin: 0 0 6px 0; font-size: 16px; color: #0F172A; }
-    .loading-screen p { margin: 0; font-size: 13px; color: #64748B; }
+    h3 { margin: 0 0 6px 0; font-size: 16px; color: #0F172A; font-weight: 700; }
+    p { margin: 0; font-size: 13px; color: #64748B; }
   </style>
 </head>
 <body>
 
-  <!-- 📥 LAYAR TUNGGU UTAMA PILIHAN ANDA -->
-  <div id="loading" class="loading-screen">
-    <div class="spinner"></div>
-    <h3>Tunggu sebentar...</h3>
-    <p>Anda akan dihubungkan ke page RT 05</p>
-  </div>
-
-  <div class="wrapper">
-    <!-- Trik mengunci URL dengan ?embedded=true agar alamat di browser tetap pendek di GitHub -->
-    <iframe id="kasIframe" src="https://google.com">
-      Browser Anda tidak mendukung iframe.
-    </iframe>
-  </div>
+  <!-- 📥 LAYAR TUNGGU (LOADING SCREEN) PILIHAN ANDA -->
+  <div class="spinner"></div>
+  <h3>Tunggu sebentar...</h3>
+  <p>Anda akan dihubungkan ke page RT 05</p>
 
   <script>
-    var iframe = document.getElementById('kasIframe');
-    var loading = document.getElementById('loading');
+    // URL Target Google Apps Script Anda yang asli
+    const targetUrl = "https://google.com";
 
-    // Ketika server Google selesai memuat halaman Kas RT, layar loading memudar dan menghilang
-    iframe.onload = function() {
-      loading.style.opacity = '0';
-      setTimeout(function() {
-        loading.style.display = 'none';
-      }, 400); 
-    };
+    // Memberikan jeda waktu 1.5 detik agar warga sempat melihat animasi loading yang keren,
+    // lalu browser akan langsung dilempar ke halaman kas secara murni tanpa iframe terlarang!
+    setTimeout(function() {
+      window.location.replace(targetUrl);
+    }, 1500);
   </script>
 
 </body>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kas RT 005 Komplek PLTG Cirebon</title>
   
-  <!-- BARIS KODE FAVICON DARI REPOSITORI GITHUB -->
+  <!-- Membaca logo favicon.png asli langsung dari repositori GitHub Anda -->
   <link rel="icon" type="image/png" href="favicon.png">
 
   <style>
@@ -14,29 +14,13 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      overflow: hidden;
       background-color: #F5F7FB;
       font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
-    }
-    iframe {
-      border: none;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    
-    /* ===== 📥 DESAIN LAYAR TUNGGU (LOADING SCREEN) ===== */
-    .loading-screen {
-      position: absolute;
-      inset: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #F5F7FB;
-      z-index: 999; 
       color: #475569;
-      transition: opacity 0.4s ease, visibility 0.4s ease; /* Efek memudar halus */
     }
     /* Animasi lingkaran berputar (Spinner) */
     .spinner {
@@ -52,46 +36,26 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    .loading-screen h3 {
-      margin: 0 0 6px 0;
-      font-size: 16px;
-      color: #0F172A;
-      font-weight: 700;
-    }
-    .loading-screen p {
-      margin: 0;
-      font-size: 13px;
-      color: #64748B;
-    }
-    /* Kelas untuk menghilangkan loading screen */
-    .fade-out {
-      opacity: 0;
-      visibility: hidden;
-    }
+    h3 { margin: 0 0 6px 0; font-size: 16px; color: #0F172A; font-weight: 700; }
+    p { margin: 0; font-size: 13px; color: #64748B; }
   </style>
 </head>
 <body>
 
-  <!-- LAYER TRANSISI LAYAR TUNGGU UNTUK WARGA -->
-  <div id="loading" class="loading-screen">
-    <div class="spinner"></div>
-    <h3>Tunggu sebentar...Maklum Mode GRATIS!!</h3>
-    <p>Anda akan dihubungkan ke page RT 05</p>
-  </div>
-
-  <!-- BINGKAI KAS RT UTAMA -->
-  <iframe id="kasIframe" src="https://google.com">
-    Browser Anda tidak mendukung iframe.
-  </iframe>
+  <!-- 📥 ANIMASI LAYAR TUNGGU SEBELUM DIALIKHAN SECARA AMAN -->
+  <div class="spinner"></div>
+  <h3>Sabar yaaa...Maklum Mode Gratis, Lambat dikit</h3>
+  <p>Anda akan dihubungkan ke page RT 05</p>
 
   <script>
-    var iframe = document.getElementById('kasIframe');
-    var loading = document.getElementById('loading');
+    // Link tujuan Google Apps Script murni Anda
+    const targetUrl = "https://google.com";
 
-    // Otomatis menghilangkan layar loading ketika server Apps Script selesai memuat halaman
-    iframe.onload = function() {
-      loading.classList.add('fade-out');
-    };
+    // Jeda waktu 1.5 detik agar warga melihat animasi loading yang profesional,
+    // lalu browser langsung dilempar ke sistem kas secara murni tanpa iframe terlarang Google!
+    setTimeout(function() {
+      window.location.replace(targetUrl);
+    }, 1500);
   </script>
 
 </body>

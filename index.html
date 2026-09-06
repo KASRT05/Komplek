@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kas RT 005 Komplek PLTG Cirebon</title>
   
-  <!-- Baris kode favicon -->
+  <!-- Membaca file favicon.png asli dari repositori GitHub Anda -->
   <link rel="icon" type="image/png" href="favicon.png">
 
   <style>
@@ -61,14 +61,14 @@
 <body>
 
   <div class="container">
-    <!-- Banner instruksi jika layar memutih / refused to connect -->
+    <!-- Banner instruksi jika layar memutih / refused to connect akibat gangguan akun Google -->
     <div class="error-helper">
       <span>⚠️ Layar tidak muncul atau Error? Pasang pengaman akun Anda:</span>
       <a class="btn-fix" id="fixLink" href="#" target="_blank">Buka Akses Langsung</a>
     </div>
 
-    <!-- Iframe dengan parameter pengaman tambahan (?authuser=0) untuk memaksa menggunakan akun utama -->
-    <iframe id="kasIframe" src="https://google.com">
+    <!-- TAUTAN IFRAME SUDAH DIKEMBALIKAN KE GOOGLE APPS SCRIPT ASLI KAS RT ANDA -->
+    <iframe id="kasIframe" src="https://script.google.com/macros/s/AKfycbw_6ECsqBpbXfpuakmAnSAC-iI4UAttGtqcaaBdpPNvCMNRHv15Qd5wX4ltOmYKjZDPVw/exec">
       Browser Anda tidak mendukung iframe.
     </iframe>
   </div>
@@ -76,23 +76,18 @@
   <script>
     const baseUrl = "https://script.google.com/macros/s/AKfycbw_6ECsqBpbXfpuakmAnSAC-iI4UAttGtqcaaBdpPNvCMNRHv15Qd5wX4ltOmYKjZDPVw/exec";
     
-    // Atur tautan tombol bantuan agar membuka di tab baru jika user mengalami multi-login error
+    // Mengarahkan tombol bantuan langsung ke server utama jika iframe macet
     document.getElementById('fixLink').href = baseUrl;
 
-    // Otomatisasi cerdas: Jika browser mendeteksi bahwa user sedang multi-login,
-    // kita paksa iframe mencoba memuat menggunakan parameter Google tanpa sesi tabrakan.
     window.onload = function() {
       const iframe = document.getElementById('kasIframe');
       
-      // Jika dalam waktu 3 detik sistem mendeteksi kegagalan muat cross-origin dari Google,
-      // banner bantuan akan tetap muncul untuk memandu warga komplek RT 005.
       setTimeout(() => {
         try {
           if (iframe.contentWindow.length === 0) {
             // Iframe gagal merespon secara internal
           }
         } catch (e) {
-          // Terjadi penolakan Cross-Origin (Refused to connect terdeteksi)
           console.log("Multi-login Google terdeteksi di browser Anda.");
         }
       }, 3000);
